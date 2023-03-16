@@ -8,7 +8,12 @@ export class Searchbar extends Component{
 
     handleSubmit = evt => {
         evt.preventDefault();
-        const{searchQuery} = this.state
+            const{searchQuery} = this.state
+        if (searchQuery.trim() === "") {
+            alert('Enter a query in the search field')
+            return
+        }
+
         this.props.submit(searchQuery)
         this.reset();
     }

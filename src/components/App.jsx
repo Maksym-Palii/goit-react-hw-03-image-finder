@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-  // import { ToastContainer} from 'react-toastify';
+
+import toast, { Toaster } from 'react-hot-toast'
 
 import { fetchImg } from "api/api";
 
@@ -20,8 +21,7 @@ export class App extends Component {
     page: 1,
     showModal: false,
     showLoader: false,
-    errorMesage: "",
-    error:false,
+    error:null,
   }
   
   componentDidUpdate(prevProps, PrevState) {
@@ -44,7 +44,7 @@ export class App extends Component {
       images: [],
       searcImages: searchQuery,
       page: 1,
-      error:false,
+      error:null,
     })
   }
 
@@ -56,7 +56,7 @@ export class App extends Component {
           this.toggleLoader();
     const response = await fetchImg(searcImages, page)
       if (response.length === 0) { 
-        this.setState({error:true, errorMesage: `Sorry, no images for this request ${searcImages}` })
+        toast.error(`Sorry, no images for this request ${searcImages}`)
         return Promise.reject(new Error(`Sorry no images for this request ${searcImages}`))
       }
     const data = await response.map(el => ({
@@ -72,7 +72,7 @@ export class App extends Component {
     }
     // catch не ловить помилки
     catch (error) {
-       this.setState({error:true })
+      this.setState({ error: error.mesage })
     } finally {
       this.toggleLoader()
    }
@@ -85,16 +85,22 @@ export class App extends Component {
   }
  
   render() {
-      const{images,showModal, error, errorMesage } =this.state
+      const{images,showModal, error} =this.state
     return (
       
       <div className={css.app}>
         <Searchbar submit={this.hendleFormSubmit} />
-         {error && <h1>{errorMesage }</h1>}
+         {error && <h1>{error}</h1>}
         <Loader showLoader={ this.state.showLoader} />
         <ImageGallery images={images} toggleModal={this.toggleModal} showModal={showModal} />
         <Button nextPage={this.nextPage} showBtn={images.length} />
-        {/* < ToastContainer position="top-center"autoClose={3000}/> */}
+        <Toaster toastOptions={{
+          duration: 3000,
+          style: {
+            background: '#363636',
+            color: '#fff',
+          }
+        }} />
 
 
     </div>

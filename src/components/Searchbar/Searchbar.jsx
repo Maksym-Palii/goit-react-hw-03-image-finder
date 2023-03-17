@@ -1,6 +1,6 @@
 import { Component } from "react";
 import { ImSearch } from 'react-icons/im'
-//   import { toast } from 'react-toastify';
+import toast from 'react-hot-toast'
 import css from "components/Searchbar/Searchbar.module.css"
 
 export class Searchbar extends Component{
@@ -12,7 +12,7 @@ export class Searchbar extends Component{
         evt.preventDefault();
             const{searchQuery} = this.state
         if (searchQuery.trim() === "") {
-            alert('Enter a query in the search field')
+            toast.error('Enter a query in the search field')
             this.props.submit("")
             return
         }
